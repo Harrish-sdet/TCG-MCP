@@ -1,6 +1,7 @@
 export interface GenerateRequest {
   storyTitle: string
   acceptanceCriteria: string
+  summary?: string
   description?: string
   additionalInfo?: string
 }
