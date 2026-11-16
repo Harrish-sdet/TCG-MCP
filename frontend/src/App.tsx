@@ -6,6 +6,7 @@ function App() {
   const [formData, setFormData] = useState<GenerateRequest>({
     storyTitle: '',
     acceptanceCriteria: '',
+    summary: '',
     description: '',
     additionalInfo: ''
   })
@@ -40,7 +41,11 @@ function App() {
     setError(null)
 
     try {
-      const response = await generateTests(formData)
+      const { summary, ...storyDetails } = formData
+      const request = summary?.trim()
+        ? { ...storyDetails, summary: summary.trim() }
+        : storyDetails
+      const response = await generateTests(request)
       setResults(response)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to generate tests')
@@ -525,6 +530,23 @@ function App() {
                 onChange={(e) => handleInputChange('storyTitle', e.target.value)}
                 placeholder="Enter the user story title..."
                 required
+                spellCheck={false}
+                data-gramm="false"
+                data-gramm_editor="false"
+                data-enable-grammarly="false"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="summary" className="form-label">
+                Summary
+              </label>
+              <textarea
+                id="summary"
+                className="form-textarea"
+                value={formData.summary}
+                onChange={(e) => handleInputChange('summary', e.target.value)}
+                placeholder="Short summary of the story (optional)..."
                 spellCheck={false}
                 data-gramm="false"
                 data-gramm_editor="false"
